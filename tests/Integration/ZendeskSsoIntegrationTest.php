@@ -43,7 +43,7 @@ class ZendeskSsoIntegrationTest extends TestCase
     {
         $api = $this->getZendeskApiClient();
         $response = $api->users()->search(['query' => getenv('ZENDESK_TEST_USER_EMAIL')]);
-        print_r($response); exit;
+        
         if (isset($response->users[0])) {
             $user = $response->users[0];
             return $api->users()->delete($user->id);

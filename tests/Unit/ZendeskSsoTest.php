@@ -134,7 +134,7 @@ class ZendeskSsoTest extends TestCase
     public function testTerminate()
     {
         $z = $this->getInstance();
-        $result = $this->callProtectedMethod($z, 'sendHeader', ['http://test.org', function(){ return true; }]);
+        $result = $this->callProtectedMethod($z, 'terminate', [function(){ return true; }]);
         $this->assertTrue($result);
     }
     
