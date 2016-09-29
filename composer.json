@@ -1,5 +1,5 @@
 {
-    "name": "fireproofsocks/zendesk-sso",
+    "name": "fireproofsocks/zendesk-jwt-sso",
     "description": "Zendesk Single-Sign On (SSO)",
     "type": "project",
     "license": "MIT",

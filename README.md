@@ -2,15 +2,90 @@
 
 This package has one goal: to facilitate automatic login from your application into your Zendesk support account using [JSON web tokens](https://jwt.io/introduction/).  Zendesk's Single Sign-on feature will automatically create new users based on their email addresses the first time they click on the special links created by this package, and it will re-connect users to existing accounts on subsequent visits.
 
+# Installation via Composer
+
+Inside of `composer.json` specify the following:
+
+```
+{
+  "require": {
+    "fireproofsocks/zendesk-jwt-sso": "dev-master"
+  }
+}
+```
+Other installation methods are not recommended: there are dependencies for this package.
+
 # Examples
 
+> See the section below about setting up your Zendesk Account to see how and where to get your subdomain and shared secret.
+
+A full example:
+
 ```
-require  
+require 'vendor/autoload.php'
+
+// Retrieve these from .env or config
+$subdomain = 'your-zendesk-subdomain';
+$shared_secret = 'xxxxxxxxxxxxxx';
+
+$sso = new \ZendeskSso\ZendeskSso($subdomain, $shared_secret);
+
+// Remember: SSO means that YOUR application is handling the login.  Only forward a user over to Zendesk when they are
+// logged in on your site. 
+if (is_logged_in()) {
+    $name = 'Name of Logged in User'; // e.g. from $_SESSION
+    $email = 'email.of@user.com';
+    $external_id = 123; // user id in your app
+    $return_to = 'http://my-domain.com/some/page';
+    $options = ['external_id' => $external_id];
+    $sso->redirectToUrl($name, $email, $return_to, $options);  // this will redirect and exit
+}
+else {
+    print 'Sorry, you are not logged into our site.  You can visit our Zendesk portal as a guest (if enabled).';
+}
 ```
 
-# Installation
+Or more simply:
 
+```
+require 'vendor/autoload.php'
 
+// Retrieve these from .env or config
+$subdomain = 'your-zendesk-subdomain';
+$shared_secret = 'xxxxxxxxxxxxxx';
+
+$sso = new \ZendeskSso\ZendeskSso($subdomain, $shared_secret);
+
+// Remember: SSO means that YOUR application is handling the login.  Only forward a user over to Zendesk when they are
+// logged in on your site. 
+if (is_logged_in()) {
+    $name = 'Name of Logged in User'; // e.g. from $_SESSION
+    $email = 'email.of@user.com';
+    $sso->redirectToUrl($name, $email);  // this will redirect and exit
+}
+```
+
+If you need to get the SSO URL, you may use the `getUrl` method, but remember that the JWT expires in a few seconds, so you don't want to print out the URL in an HTML template or in an anchor tag -- you want to redirect to that URL quickly after generating it.
+
+```
+require 'vendor/autoload.php'
+
+// Retrieve these from .env or config
+$subdomain = 'your-zendesk-subdomain';
+$shared_secret = 'xxxxxxxxxxxxxx';
+
+$sso = new \ZendeskSso\ZendeskSso($subdomain, $shared_secret);
+ 
+if (is_logged_in()) {
+    $name = 'Name of Logged in User'; // e.g. from $_SESSION
+    $email = 'email.of@user.com';
+    $url = $sso->getUrl($name, $email);
+    header('Location: '.$url);
+    exit();
+}
+```
+
+---------------------------------------------------------
 
 # Setup of Your Zendesk Account
 
