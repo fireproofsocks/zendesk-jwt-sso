@@ -1,5 +1,7 @@
 # Zendesk JSON Web Token (JWT) Single Sign-On (SSO)
 
+[![Build Status](https://travis-ci.org/fireproofsocks/zendesk-jwt-sso.svg?branch=master)](https://travis-ci.org/fireproofsocks/zendesk-jwt-sso) [![codecov](https://codecov.io/gh/fireproofsocks/zendesk-jwt-sso/branch/master/graph/badge.svg)](https://codecov.io/gh/fireproofsocks/zendesk-jwt-sso)
+
 This package has one goal: to facilitate automatic login from your application into your Zendesk support account using [JSON web tokens](https://jwt.io/introduction/).  Zendesk's Single Sign-on feature will automatically create new users based on their email addresses the first time they click on the special links created by this package, and it will re-connect users to existing accounts on subsequent visits.
 
 # Installation via Composer
