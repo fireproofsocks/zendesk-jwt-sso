@@ -5,6 +5,7 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "require": {
+        "php": ">=5.5.9",
         "firebase/php-jwt": "^4.0"
     },
     "require-dev": {

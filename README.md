@@ -4,9 +4,11 @@
 
 This package has one goal: to facilitate automatic login from your application into your Zendesk support account using [JSON web tokens](https://jwt.io/introduction/).  Zendesk's Single Sign-on feature will automatically create new users based on their email addresses the first time they click on the special links created by this package, and it will re-connect users to existing accounts on subsequent visits.
 
+This package does not wrap the [Zendesk API](https://github.com/zendesk/zendesk_api_client_php) or make any API calls, nor does the Zendesk API offer any methods or documentation for generating SSO JSON web tokens.  This package can be used independently or in conjuction with the Zendesk API.
+
 # Installation via Composer
 
-Inside of `composer.json` specify the following:
+Inside of `composer.json` specify the following (substitute a specific version number from [Packagist](https://packagist.org/packages/fireproofsocks/zendesk-jwt-sso) if necessary):
 
 ```
 {
@@ -24,7 +26,7 @@ Other installation methods are not recommended: there are dependencies for this 
 A full example, e.g. inside a controller or on a dedicated PHP page in your web root:
 
 ```
-require 'vendor/autoload.php'
+require_once 'vendor/autoload.php'
 
 // Retrieve these from .env or config
 $subdomain = 'your-zendesk-subdomain';
@@ -50,7 +52,7 @@ else {
 Or more simply:
 
 ```
-require 'vendor/autoload.php'
+require_once 'vendor/autoload.php'
 
 // Retrieve these from .env or config
 $subdomain = 'your-zendesk-subdomain';
@@ -70,7 +72,7 @@ if (is_logged_in()) {
 If you need to get the SSO URL, you may use the `getUrl` method, but remember that the JWT expires in a few seconds, so you don't want to print out the URL in an HTML template or in an anchor tag -- you want to redirect to that URL quickly after generating it.
 
 ```
-require 'vendor/autoload.php'
+require_once 'vendor/autoload.php'
 
 // Retrieve these from .env or config
 $subdomain = 'your-zendesk-subdomain';
@@ -91,14 +93,17 @@ if (is_logged_in()) {
 
 # Setup of Your Zendesk Account
 
-To connect to an existing Zendesk account, your application will need the following things:
+You will need to configure your Zendesk account in order to use the SSO feature. To connect to an existing Zendesk account, your application will need the following things:
  
 - **Zendesk sub-domain**
 - **Shared Secret token**
 
-If the Zendesk account has already been configured and you have those bits of information, you can skip this section and continue on to testing your implementation.  However, if you need to set up your application to test against a [Sandbox environment](https://support.zendesk.com/hc/en-us/articles/203661826-Testing-changes-in-your-sandbox-Enterprise-) (e.g. so that developers never have access to the live, production tokens or data), then you will need to create a sandbox and enable/configure SSO on the sandbox.  Unfortunately the Sandbox environment is only available on certain subscription plans.  See more about Sandboxes in the "Testing Integration" section below.
+If the Zendesk account has already been configured and you have those bits of information, you can skip this section and continue on to testing your implementation.  However, if you need to set up your application to test against a [Sandbox environment](https://support.zendesk.com/hc/en-us/articles/203661826-Testing-changes-in-your-sandbox-Enterprise-) (e.g. so that developers do not have access to the live, production tokens or data), then you will need to create a sandbox and enable/configure SSO on the sandbox.  Unfortunately the Sandbox environment is only available on certain subscription plans.  See more about Sandboxes in the "Testing Integration" section below.
+
+> **REMEMBER:** You will have to repeat the setup each time the Sandbox environment is reset!
 
 ## What Zendesk Needs
+
 Before you set up your Zendesk account for Single Sign-on, you should know the following items:
  
 - **Your application's login URL**
