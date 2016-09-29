@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="false"
+        >
+    <php>
+        <!--=================================================================================
+        Add your SSO details here.  You can retrieve them from your Zendesk dashboard at /agent/admin/security
+        make sure you select which user-group you are setting this up for.
+        See the README for more details.
+        =================================================================================-->
+        <!-- String to uniquely identify your Zendesk account -->
+        <env name="ZENDESK_SUBDOMAIN" value=""/>
+        <!-- Copy from your Zendesk account at /agent/admin/security -->
+        <env name="ZENDESK_SHARED_SECRET" value=""/>
+        <!--=================================================================================
+        Use the below vars for integration testing only. We use the Zendesk API to verify and cleanup the results
+        of our SSO testing efforts.  In your Zendesk dashboard (either the regular one or the Sandbox),
+        head to Admin > Channels > API (or go to /agent/admin/api) and enable Token Access for your admin user.
+        You need at least one active token for your user.  Paste the token in your phpunit.xml file.
+         =================================================================================-->
+        <env name="ZENDESK_API_TOKEN" value=""/>
+        <!-- Paste your admin username here: -->
+        <env name="ZENDESK_API_USER" value=""/>
+        <!-- We create and delete a user by this name. Change these if you must. -->
+        <env name="ZENDESK_TEST_USER_NAME" value="Testy McTestface"/>
+        <env name="ZENDESK_TEST_USER_EMAIL" value="testymctestface@testerson.com"/>
+        <env name="ZENDESK_TEST_USER_EXTERNAL_ID" value="123"/>
+    </php>
+    <testsuites>
+        <testsuite name="build">
+            <directory>./tests/Unit/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory>./src/</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-clover" target="clover.xml"/>
+    </logging>
+</phpunit>
