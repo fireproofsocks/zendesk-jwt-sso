@@ -73,6 +73,14 @@ class ZendeskSsoIntegrationTest extends TestCase
         $api = $this->getZendeskApiClient();
         $this->assertInstanceOf(HttpClient::class, $api);
     }
+    
+    public function testZendeskApiClientCredentials()
+    {
+        $api = $this->getZendeskApiClient();
+        $response = $api->users()->search(['query' => getenv('ZENDESK_TEST_USER_EMAIL')]);
+        $this->assertTrue(is_object($response));
+    }
+    
     /**
      * The response appears identical for a first time login and a login for an existing account
      */
@@ -85,10 +93,19 @@ class ZendeskSsoIntegrationTest extends TestCase
         // These might change if their redirect process adds or removes layers
         $this->assertNotEmpty($headers[0]);
         $this->assertEquals('HTTP/1.1 302 Found', $headers[0]);
-        $this->assertNotEmpty($headers[1]);
-        $this->assertEquals('HTTP/1.1 302 Found', $headers[1]);
-        $this->assertNotEmpty($headers[0]);
-        $this->assertEquals('HTTP/1.1 200 OK', $headers[2]);
+        
+        // If you have a custom support domain e.g. help.yourdomain.com, then the exact redirects may be different.
+        // e.g. you may have a HTTP/1.1 301 Moved Permanently in here.
+        // So we want to focus on whether we got to a 200 eventually
+        $got_200_eventually = false;
+        for ($i = 1; $i <= 10; $i++) {
+            if (isset($headers[$i]) && $headers[$i] == 'HTTP/1.1 200 OK') {
+                $got_200_eventually = true;
+                break;
+            }
+        }
+        
+        $this->assertTrue($got_200_eventually);
         
         $this->assertTrue(array_key_exists('X-Zendesk-Request-Id', $headers));
         $this->assertTrue(array_key_exists('X-Zendesk-Origin-Server', $headers));

@@ -89,6 +89,24 @@ if (is_logged_in()) {
 }
 ```
 
+## Custom User Fields 
+
+If you are passing custom `user_fields`, you have to spend time setting up the user fields in your Zendesk admin dashboard under "Manage > User Fields".  The names you pass in the key/value associative array must match the field names defines in your dashboard.  Deeper object structures are not supported, e.g.
+ 
+```
+$subdomain = 'your-zendesk-subdomain';
+$shared_secret = 'xxxxxxxxxxxxxx';
+$options = [
+    'external_id' => 123,
+    'user_fields' => [
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'profile_link' => 'http://yoursite.com/profile/john-doe',
+    ]
+];
+$sso = new \ZendeskSso\ZendeskSso($subdomain, $shared_secret, $options);
+```
+
 ---------------------------------------------------------
 
 # Setup of Your Zendesk Account
@@ -101,6 +119,8 @@ You will need to configure your Zendesk account in order to use the SSO feature.
 If the Zendesk account has already been configured and you have those bits of information, you can skip this section and continue on to testing your implementation.  However, if you need to set up your application to test against a [Sandbox environment](https://support.zendesk.com/hc/en-us/articles/203661826-Testing-changes-in-your-sandbox-Enterprise-) (e.g. so that developers do not have access to the live, production tokens or data), then you will need to create a sandbox and enable/configure SSO on the sandbox.  Unfortunately the Sandbox environment is only available on certain subscription plans.  See more about Sandboxes in the "Testing Integration" section below.
 
 > **REMEMBER:** You will have to repeat the setup each time the Sandbox environment is reset!
+
+> **Custom Domains:** If you are using a custom domain for your Zendesk help center instead of a Zendesk subdomain, e.g. help.yourdomain.com, your login URL still has to take place on the subdomain!  Zendesk will display a warning to that effect if you try to perform an SSO login on your custom domain.  
 
 ## What Zendesk Needs
 
